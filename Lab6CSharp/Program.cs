@@ -1,114 +1,101 @@
 ﻿using System;
 using System.Collections;
 
+// Task1
 
-public interface IUser
+interface IEngine
 {
-    string Name { get; set; }
-    string Address { get; set; }
-    string PhoneNumber { get; set; }
-    void ShowUserInfo();
+    void Show();
+    int GetPrice();
 }
+
+class Engine : IEngine
+{
+    protected string Name { get; set; }
+    protected int GuaranteePeriod { get; set; }
+    protected int Price { get; set; }
+
+    public Engine(string name, int guaranteePeriod, int price)
+    {
+        Name = name;
+        GuaranteePeriod = guaranteePeriod;
+        Price = price;
+        Console.WriteLine("Engine constructor called.");
+    }
+
+    public virtual void Show()
+    {
+        Console.WriteLine($"Name: {Name}");
+        Console.WriteLine($"Guarantee Period: {GuaranteePeriod}");
+        Console.WriteLine($"Price: {Price}");
+    }
+
+    public int GetPrice()
+    {
+        return Price;
+    }
+}
+
+class InternalCombustionEngine : Engine
+{
+    protected int Count { get; set; }
+
+    public InternalCombustionEngine(string name, int guaranteePeriod, int price, int count)
+        : base(name, guaranteePeriod, price)
+    {
+        Count = count;
+        Console.WriteLine("InternalCombustionEngine constructor called.");
+    }
+
+    public override void Show()
+    {
+        base.Show();
+        Console.WriteLine($"Count: {Count}");
+    }
+}
+
+class DieselEngine : InternalCombustionEngine
+{
+    protected string Weight { get; set; }
+
+    public DieselEngine(string name, int guaranteePeriod, int price, int count, string weight)
+        : base(name, guaranteePeriod, price, count)
+    {
+        Weight = weight;
+        Console.WriteLine("DieselEngine constructor called.");
+    }
+
+    public override void Show()
+    {
+        base.Show();
+        Console.WriteLine($"Weight: {Weight}");
+    }
+}
+
+class JetEngine : Engine
+{
+    protected string Model { get; set; }
+
+    public JetEngine(string name, int guaranteePeriod, int price, string model)
+        : base(name, guaranteePeriod, price)
+    {
+        Model = model;
+        Console.WriteLine("JetEngine constructor called.");
+    }
+
+    public override void Show()
+    {
+        base.Show();
+        Console.WriteLine($"Model: {Model}");
+    }
+}
+
+// Task1
+// Task2
 
 public interface IDotNet
 {
     DateTime CreatedAt { get; }
-}
-
-// Клас Person, що реалізує інтерфейс користувача
-public class Person : IUser
-{
-    public string Name { get; set; }
-    public string Address { get; set; }
-    public string PhoneNumber { get; set; }
-
-    public Person()
-    {
-        Console.WriteLine("Person Constructor without parameters called.");
-    }
-
-    public Person(string name, string address, string phoneNumber)
-    {
-        Name = name;
-        Address = address;
-        PhoneNumber = phoneNumber;
-        Console.WriteLine("Person Constructor with all parameters called.");
-    }
-
-    public void ShowUserInfo()
-    {
-        Console.WriteLine($"Name: {Name}");
-        Console.WriteLine($"Address: {Address}");
-        Console.WriteLine($"Phone Number: {PhoneNumber}");
-    }
-}
-
-public class Employee : Person, IUser, IDotNet
-{
-    public string Position { get; set; }
-    public double Salary { get; set; }
-    public DateTime CreatedAt { get; }
-
-    public Employee(string name, string address, string phoneNumber, string position, double salary)
-        : base(name, address, phoneNumber)
-    {
-        Position = position;
-        Salary = salary;
-        CreatedAt = DateTime.Now;
-        Console.WriteLine("Employee Constructor with all parameters called.");
-    }
-
-    public new void ShowUserInfo()
-    {
-        base.ShowUserInfo();
-        Console.WriteLine($"Position: {Position}");
-        Console.WriteLine($"Salary: {Salary}");
-    }
-}
-
-public class Worker : Person, IUser
-{
-    public string WorkSchedule { get; set; }
-    public DateTime HireDate { get; set; }
-
-    public Worker(string name, string address, string phoneNumber, string workSchedule, DateTime hireDate)
-        : base(name, address, phoneNumber)
-    {
-        WorkSchedule = workSchedule;
-        HireDate = hireDate;
-        Console.WriteLine("Worker Constructor with all parameters called.");
-    }
-
-    public new void ShowUserInfo()
-    {
-        base.ShowUserInfo();
-        Console.WriteLine($"Work Schedule: {WorkSchedule}");
-        Console.WriteLine($"Hire Date: {HireDate}");
-    }
-}
-
-public class Engineer : Worker, IUser, IDotNet
-{
-    public string Specialization { get; set; }
-    public string QualificationLevel { get; set; }
-    public DateTime CreatedAt { get; }
-
-    public Engineer(string name, string address, string phoneNumber, string workSchedule, int v, DateTime hireDate,
-                    string specialization, string qualificationLevel)
-        : base(name, address, phoneNumber, workSchedule, hireDate)
-    {
-        Specialization = specialization;
-        QualificationLevel = qualificationLevel;
-        CreatedAt = DateTime.Now;
-        Console.WriteLine("Engineer Constructor with all parameters called.");
-    }
-
-    public new void ShowUserInfo()
-    {
-        base.ShowUserInfo();
-        Console.WriteLine($"Specialization: {Specialization}");
-        Console.WriteLine($"Qualification Level: {QualificationLevel}");
-    }
 }
 
 public interface IFunction : IDotNet
@@ -165,6 +152,9 @@ public class Hyperbola : FunctionBase
         return 1.0 / x;
     }
 }
+
+// Task2
+// Task3
 
 public class Triangle : IEnumerable
 {
@@ -330,6 +320,8 @@ public class Triangle : IEnumerable
         }
     }
 }
+// Task3
+
 class Program
 {
     static void Main(string[] args)
@@ -338,20 +330,30 @@ class Program
         string? str = Console.ReadLine();
         int n = 0;
         if (str != null) n = int.Parse(str);
+
+        // Task1
+
         if (n == 1)
         {
-            Person person = new Person("John Doe", "123 Main St", "555-1234");
-            person.ShowUserInfo();
+            IEngine engine = new Engine("Generic Engine", 24, 1000);
+            engine.Show();
             Console.WriteLine();
 
-            Employee employee = new Employee("Jane Smith", "456 Elm St", "555-5678", "Manager", 50000);
-            employee.ShowUserInfo();
+            InternalCombustionEngine internalCombustionEngine = new InternalCombustionEngine("Internal Combustion Engine", 36, 2000, 6);
+            internalCombustionEngine.Show();
             Console.WriteLine();
 
-            Worker worker = new Worker("Alice Johnson", "789 Oak St", "555-91011", "9-5", DateTime.Now);
-            worker.ShowUserInfo();
+            DieselEngine dieselEngine = new DieselEngine("Diesel Engine", 48, 3000, 8, "Heavy");
+            dieselEngine.Show();
             Console.WriteLine();
+
+            JetEngine jetEngine = new JetEngine("Jet Engine", 60, 5000, "Turbo");
+            jetEngine.Show();
         }
+
+        // Task1
+        // Task2
+
         else if (n == 2)
         {
             IFunction[] functions = new IFunction[]
@@ -370,6 +372,10 @@ class Program
                 Console.WriteLine();
             }
         }
+
+        // Task2
+        // Task3
+
         else if (n == 3)
         {
             Triangle triangle = new Triangle(3, 4, 5, "Red");
@@ -386,5 +392,7 @@ class Program
                 }
             }
         }
+
+        // Task3
     }
 }
